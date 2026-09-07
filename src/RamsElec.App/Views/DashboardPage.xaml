@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:RamsElec.App.ViewModels"
+    x:Class="RamsElec.App.Views.DashboardPage"
+    x:DataType="vm:DashboardViewModel"
+    Title="Dashboard"
+    BackgroundColor="#F5F5F5">
+
+    <ScrollView>
+        <VerticalStackLayout Spacing="15" Padding="15">
+            <Label Text="{Binding WelcomeMessage}" FontSize="24" FontAttributes="Bold" TextColor="#1B2A4A" />
+            <Frame BackgroundColor="White" CornerRadius="8" Padding="10" HasShadow="True">
+                <HorizontalStackLayout Spacing="10">
+                    <Label Text="Last synced:" TextColor="#666" VerticalOptions="Center" />
+                    <Label Text="{Binding LastSynced}" FontAttributes="Bold" VerticalOptions="Center" />
+                    <Button Text="Sync Now" Command="{Binding SyncCommand}" BackgroundColor="#1B2A4A" TextColor="White" FontSize="12" HeightRequest="35" CornerRadius="4" HorizontalOptions="EndAndExpand" IsEnabled="{Binding IsSyncing, Converter={StaticResource InvertedBoolConverter}}" />
+                </HorizontalStackLayout>
+            </Frame>
+            <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" ColumnSpacing="10" RowSpacing="10">
+                <Frame Grid.Row="0" Grid.Column="0" BackgroundColor="#1B2A4A" CornerRadius="10" Padding="15" HasShadow="True"><VerticalStackLayout><Label Text="{Binding TotalJobs}" FontSize="32" FontAttributes="Bold" TextColor="#FFC107" /><Label Text="Total Jobs" TextColor="White" FontSize="13" /></VerticalStackLayout></Frame>
+                <Frame Grid.Row="0" Grid.Column="1" BackgroundColor="#2E7D32" CornerRadius="10" Padding="15" HasShadow="True"><VerticalStackLayout><Label Text="{Binding CompletedJobs}" FontSize="32" FontAttributes="Bold" TextColor="White" /><Label Text="Completed" TextColor="#C8E6C9" FontSize="13" /></VerticalStackLayout></Frame>
+                <Frame Grid.Row="1" Grid.Column="0" BackgroundColor="#E65100" CornerRadius="10" Padding="15" HasShadow="True"><VerticalStackLayout><Label Text="{Binding OpenJobs}" FontSize="32" FontAttributes="Bold" TextColor="White" /><Label Text="Open Jobs" TextColor="#FFCC80" FontSize="13" /></VerticalStackLayout></Frame>
+                <Frame Grid.Row="1" Grid.Column="1" BackgroundColor="#283593" CornerRadius="10" Padding="15" HasShadow="True"><VerticalStackLayout><Label Text="{Binding TotalInvoices}" FontSize="32" FontAttributes="Bold" TextColor="White" /><Label Text="Invoices" TextColor="#9FA8DA" FontSize="13" /></VerticalStackLayout></Frame>
+            </Grid>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:RamsElec.App.ViewModels"
+    x:Class="RamsElec.App.Views.LoginPage"
+    x:DataType="vm:LoginViewModel"
+    Shell.NavBarIsVisible="False"
+    BackgroundColor="#1B2A4A">
+
+    <ScrollView>
+        <VerticalStackLayout
+            Spacing="20"
+            Padding="30"
+            VerticalOptions="Center"
+            MaximumWidthRequest="400">
+
+            <!-- Logo / Branding -->
+            <Label
+                Text="RAMS@ELEC"
+                FontSize="36"
+                FontAttributes="Bold"
+                TextColor="#FFC107"
+                HorizontalOptions="Center" />
+
+            <Label
+                Text="Manager Portal"
+                FontSize="16"
+                TextColor="White"
+                HorizontalOptions="Center"
+                Margin="0,0,0,20" />
+
+            <!-- Email -->
+            <Entry
+                Text="{Binding Email}"
+                Placeholder="Email address"
+                PlaceholderColor="#90A4AE"
+                TextColor="White"
+                BackgroundColor="#263859"
+                Keyboard="Email" />
+
+            <!-- Password -->
+            <Entry
+                Text="{Binding Password}"
+                Placeholder="Password"
+                PlaceholderColor="#90A4AE"
+                TextColor="White"
+                BackgroundColor="#263859"
+                IsPassword="True" />
+
+            <!-- Error -->
+            <Label
+                Text="{Binding ErrorMessage}"
+                TextColor="#EF5350"
+                IsVisible="{Binding ErrorMessage, Converter={StaticResource StringToBoolConverter}}"
+                HorizontalOptions="Center" />
+
+            <!-- Login Button -->
+            <Button
+                Text="Sign In"
+                Command="{Binding LoginCommand}"
+                BackgroundColor="#FFC107"
+                TextColor="#1B2A4A"
+                FontAttributes="Bold"
+                HeightRequest="50"
+                CornerRadius="8"
+                IsEnabled="{Binding IsBusy, Converter={StaticResource InvertedBoolConverter}}" />
+
+            <!-- Loading -->
+            <ActivityIndicator
+                IsRunning="{Binding IsBusy}"
+                IsVisible="{Binding IsBusy}"
+                Color="#FFC107" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

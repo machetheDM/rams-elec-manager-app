@@ -1,0 +1,63 @@
+# .NET
+bin/
+obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.userprefs
+
+# NuGet
+*.nupkg
+**/packages/*
+!**/packages/build/
+
+# Build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+build/
+bld/
+
+# Visual Studio
+.vs/
+*.sln.ide/
+launchSettings.json
+
+# JetBrains Rider
+.idea/
+*.sln.iml
+
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# MAUI build outputs
+*.apk
+*.aab
+*.ipa
+# *.app would match the RamsElec.App directory — use specific paths instead
+Platforms/**/bin/
+Platforms/**/obj/
+*.msix
+*.msixbundle
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Secrets - never commit
+appsettings.Production.json
+appsettings.Staging.json
+secrets.json
+
+# Temp files
+*.tmp
+*.bak
+*.swp
+*~.nib
