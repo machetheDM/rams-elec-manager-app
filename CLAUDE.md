@@ -493,9 +493,45 @@ Build the parser with a sample, then refine.
 
 ---
 
-## State as of 2026-09-06
+## State as of 2026-09-07
 
-**Initial commit.** Project plan documented. No code yet.
+**Phase 1 scaffold complete.** `dotnet build RamsElec.sln` passes with 0 errors across all
+target frameworks (Android, iOS, Mac Catalyst, Windows).
+
+**Implemented (Phase 1):**
+- [x] Solution structure: RamsElec.App + RamsElec.Api + RamsElec.Shared
+- [x] Shared models: Invoice, InvoiceLineItem, Payment, Customer, Job, CompanyInfo
+- [x] Shared enums: InvoiceStatus (7 states), PaymentMethod, DeliveryChannel
+- [x] Shared DTOs: CreateInvoice, Invoice, SendInvoice, RecordPayment, Login, Sync, Analytics
+- [x] API: EF Core DbContext with snake_case mappings, JWT auth, InvoiceService, AuthService
+- [x] API: QuestPDF PdfService with branded invoice template (navy header, structured tables)
+- [x] API: AuthController, InvoiceController (CRUD + PDF + send + pay), HealthController
+- [x] API: Swagger/OpenAPI, CORS for MAUI, development DB seeding
+- [x] MAUI: Shell tab navigation (Dashboard, Jobs, Invoices, Settings)
+- [x] MAUI: LoginPage with branded UI, secure JWT storage
+- [x] MAUI: DashboardPage with KPI cards, sync status
+- [x] MAUI: JobsPage with list from local SQLite
+- [x] MAUI: InvoiceListPage + InvoiceCreatePage with line items
+- [x] MAUI: SettingsPage with account info and logout
+- [x] MAUI: SQLite LocalDatabase with customer/job/invoice tables
+- [x] MAUI: ApiClient with Android/localhost base URL handling
+- [x] MAUI: SyncService (pull customers + jobs from API)
+- [x] Docker Compose (API + Postgres 16)
+- [x] Dockerfile for API
+- [x] GitHub repo: github.com/machetheDM/rams-elec-manager-app
+
+**Not yet implemented:**
+- Phase 2: Invoice CRUD end-to-end, PDF preview, quote-to-invoice, company settings
+- Phase 3: SMS/WhatsApp delivery, S3 upload, FNB SpeedPoint recording
+- Phase 4: Microsoft Graph email monitoring, payment matching agent
+- Phase 5: LiveCharts2 analytics pages
+- Phase 6: Push notifications, CI pipeline, app store prep
+
+**Known warnings (harmless):**
+- MVVMTK0045: CommunityToolkit.Mvvm suggests partial properties for WinRT AOT compat.
+  Not blocking; can be migrated later.
+- XC0022/XC0024/XC0045: XAML compiled binding warnings in InvoiceCreatePage DataTemplate.
+  The bindings work at runtime; these are compile-time type hints that can be refined.
 
 **Pending decisions:**
 - [ ] Exact FNB payment email format (need a real sample to build the parser)
