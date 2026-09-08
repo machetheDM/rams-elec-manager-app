@@ -2,6 +2,7 @@ using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using RamsElec.App.Services;
+using RamsElec.App.Views;
 using RamsElec.Shared.DTOs;
 
 namespace RamsElec.App.ViewModels;
@@ -45,5 +46,12 @@ public partial class InvoiceListViewModel : ObservableObject
     private async Task NavigateToCreateAsync()
     {
         await Shell.Current.GoToAsync(nameof(Views.InvoiceCreatePage));
+    }
+
+    [RelayCommand]
+    private async Task NavigateToDetailAsync(InvoiceDto invoice)
+    {
+        if (invoice is null) return;
+        await Shell.Current.GoToAsync($"{nameof(InvoiceDetailPage)}?InvoiceId={invoice.Id}");
     }
 }

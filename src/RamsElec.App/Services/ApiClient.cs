@@ -121,4 +121,22 @@ public class ApiClient
     {
         return await _http.GetFromJsonAsync<DashboardAnalyticsDto>("api/analytics/dashboard");
     }
+
+    // Payments
+    public async Task<List<Payment>> GetPaymentsForInvoiceAsync(string invoiceId)
+    {
+        return await _http.GetFromJsonAsync<List<Payment>>($"api/payment/invoice/{invoiceId}") ?? [];
+    }
+
+    public async Task<bool> RecordPaymentAsync(RecordPaymentDto dto)
+    {
+        var response = await _http.PostAsJsonAsync("api/payment", dto);
+        return response.IsSuccessStatusCode;
+    }
+
+    public async Task<bool> RecordFnbPaymentAsync(FnbPaymentDto dto)
+    {
+        var response = await _http.PostAsJsonAsync("api/payment/fnb", dto);
+        return response.IsSuccessStatusCode;
+    }
 }

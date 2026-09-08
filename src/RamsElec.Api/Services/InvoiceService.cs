@@ -78,7 +78,7 @@ public class InvoiceService
             .FirstOrDefaultAsync(i => i.Id == id);
     }
 
-    public async Task<Invoice?> MarkAsSent(string id, DeliveryChannel channel)
+    public async Task<Invoice?> MarkAsSent(string id, DeliveryChannel channel, string? pdfUrl = null)
     {
         var invoice = await _db.Invoices.FindAsync(id);
         if (invoice == null) return null;
@@ -87,6 +87,8 @@ public class InvoiceService
         invoice.SentVia = channel;
         invoice.SentAt = DateTime.UtcNow;
         invoice.UpdatedAt = DateTime.UtcNow;
+        if (!string.IsNullOrEmpty(pdfUrl))
+            invoice.PdfUrl = pdfUrl;
 
         await _db.SaveChangesAsync();
         return invoice;

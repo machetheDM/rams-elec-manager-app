@@ -40,6 +40,11 @@ builder.Services.AddScoped<PdfService>();
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<CompanyInfoService>();
 builder.Services.AddScoped<AnalyticsService>();
+builder.Services.AddScoped<S3Service>();
+builder.Services.AddScoped<TwilioService>();
+builder.Services.AddScoped<WhatsAppService>();
+builder.Services.AddScoped<PaymentService>();
+builder.Services.AddHostedService<OverdueInvoiceService>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

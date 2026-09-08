@@ -13,11 +13,18 @@ public class InvoiceController : ControllerBase
 {
     private readonly InvoiceService _invoiceService;
     private readonly PdfService _pdfService;
+    private readonly S3Service _s3Service;
+    private readonly TwilioService _twilioService;
+    private readonly WhatsAppService _whatsAppService;
 
-    public InvoiceController(InvoiceService invoiceService, PdfService pdfService)
+    public InvoiceController(InvoiceService invoiceService, PdfService pdfService,
+        S3Service s3Service, TwilioService twilioService, WhatsAppService whatsAppService)
     {
         _invoiceService = invoiceService;
         _pdfService = pdfService;
+        _s3Service = s3Service;
+        _twilioService = twilioService;
+        _whatsAppService = whatsAppService;
     }
 
     [HttpGet]
@@ -56,21 +63,40 @@ public class InvoiceController : ControllerBase
     [HttpPost("{id}/send")]
     public async Task<IActionResult> SendInvoice(string id, [FromBody] SendInvoiceDto dto)
     {
-        var invoice = await _invoiceService.MarkAsSent(id, dto.Channel);
+        var invoice = await _invoiceService.GetInvoice(id);
         if (invoice == null) return NotFound();
 
-        // TODO: Phase 3 — trigger Twilio SMS or n8n WhatsApp webhook
-        return Ok(new { message = $"Invoice {invoice.InvoiceNumber} marked as sent via {dto.Channel}" });
+        var pdf = _pdfService.GenerateInvoicePdf(invoice);
+        var s3Key = await _s3Service.UploadInvoicePdfAsync(invoice.InvoiceNumber, pdf);
+        var presignedUrl = await _s3Service.GetPresignedUrlAsync(s3Key);
+
+        var phone = dto.RecipientPhone ?? invoice.Customer?.Phone;
+        string? result = null;
+
+        if (dto.Channel == DeliveryChannel.Sms && !string.IsNullOrEmpty(phone))
+        {
+            result = await _twilioService.SendInvoiceLinkAsync(phone, presignedUrl, invoice.InvoiceNumber);
+        }
+        else if (dto.Channel == DeliveryChannel.WhatsApp && !string.IsNullOrEmpty(phone))
+        {
+            result = await _whatsAppService.SendInvoiceLinkAsync(phone, presignedUrl, invoice.InvoiceNumber, invoice.Customer?.Name);
+        }
+
+        var updated = await _invoiceService.MarkAsSent(id, dto.Channel, presignedUrl);
+
+        return Ok(new
+        {
+            message = $"Invoice {invoice.InvoiceNumber} sent via {dto.Channel}",
+            pdfUrl = presignedUrl,
+            deliveryResult = result
+        });
     }
 
     [HttpPost("{id}/pay")]
-    public async Task<IActionResult> RecordPayment(string id, [FromBody] RecordPaymentDto dto)
+    public IActionResult RecordPayment(string id, [FromBody] RecordPaymentDto dto)
     {
-        var invoice = await _invoiceService.MarkAsPaid(id);
-        if (invoice == null) return NotFound();
-
-        // TODO: Phase 3 — persist payment record, generate receipt
-        return Ok(new { message = $"Invoice {invoice.InvoiceNumber} marked as paid" });
+        // This endpoint is now handled by PaymentController; kept for backward compatibility
+        return Ok(new { message = "Use POST /api/payment" });
     }
 
     [HttpPut("{id}")]
