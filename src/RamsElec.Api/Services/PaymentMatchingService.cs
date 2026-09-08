@@ -9,15 +9,65 @@ public class PaymentMatchingService
 {
     private readonly AppDbContext _db;
     private readonly ILogger<PaymentMatchingService> _logger;
+    private readonly QuoteService _quoteService;
 
-    public PaymentMatchingService(AppDbContext db, ILogger<PaymentMatchingService> logger)
+    public PaymentMatchingService(AppDbContext db, ILogger<PaymentMatchingService> logger, QuoteService quoteService)
     {
         _db = db;
         _logger = logger;
+        _quoteService = quoteService;
     }
 
     public async Task<PaymentMatch> EvaluateAsync(BankPaymentNotification notification)
     {
+        // First: try to match against an approved quote payment reference
+        if (!string.IsNullOrEmpty(notification.Reference))
+        {
+            var quote = await _db.Quotes
+                .Include(q => q.Customer)
+                .FirstOrDefaultAsync(q => q.PaymentReference == notification.Reference &&
+                                          q.Status == QuoteStatus.Approved);
+
+            if (quote != null)
+            {
+                var quotePayment = await _quoteService.RecordQuotePaymentAsync(
+                    quote.Id,
+                    notification.Amount ?? quote.Total,
+                    notification.Reference,
+                    notification.PayerName,
+                    notification.Id);
+
+                if (quotePayment != null && quote.AmountPaid + (notification.Amount ?? 0) >= quote.Total)
+                {
+                    var invoice = await _quoteService.ConvertToInvoiceAsync(quote.Id);
+                    if (invoice != null)
+                    {
+                        // TODO: send receipt via SMS/WhatsApp/Email — this is a design hook
+                    }
+                }
+
+                var quoteMatch = new PaymentMatch
+                {
+                    Id = GenerateCuid(),
+                    InvoiceId = quote.ConvertedInvoiceId,
+                    BankPaymentId = notification.Id,
+                    Confidence = 1.0m,
+                    Status = "auto_processed",
+                    MatchedBy = "system",
+                    ReviewReason = $"Matched quote {quote.QuoteNumber} by payment reference {quote.PaymentReference}"
+                };
+
+                _db.PaymentMatches.Add(quoteMatch);
+                _db.BankPaymentNotifications.Add(notification);
+                await _db.SaveChangesAsync();
+
+                _logger.LogInformation("Quote {Quote} paid via reference {Ref}; converted to invoice {Invoice}",
+                    quote.QuoteNumber, quote.PaymentReference, quote.ConvertedInvoiceId);
+
+                return quoteMatch;
+            }
+        }
+
         var candidates = await _db.Invoices
             .Include(i => i.Customer)
             .Where(i => i.Status == InvoiceStatus.Sent || i.Status == InvoiceStatus.Overdue)

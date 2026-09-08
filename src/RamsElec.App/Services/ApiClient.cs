@@ -71,6 +71,47 @@ public class ApiClient
         return await response.Content.ReadAsByteArrayAsync();
     }
 
+    // Quotes
+    public async Task<List<QuoteDto>> GetQuotesAsync()
+    {
+        return await _http.GetFromJsonAsync<List<QuoteDto>>("api/quote") ?? [];
+    }
+
+    public async Task<QuoteDto?> GetQuoteAsync(string id)
+    {
+        var response = await _http.GetAsync($"api/quote/{id}");
+        if (!response.IsSuccessStatusCode) return null;
+        return await response.Content.ReadFromJsonAsync<QuoteDto>();
+    }
+
+    public async Task<QuoteDto?> CreateQuoteAsync(CreateQuoteDto dto)
+    {
+        var response = await _http.PostAsJsonAsync("api/quote", dto);
+        if (!response.IsSuccessStatusCode) return null;
+        return await response.Content.ReadFromJsonAsync<QuoteDto>();
+    }
+
+    public async Task<QuoteDto?> ApproveQuoteAsync(string id)
+    {
+        var response = await _http.PostAsync($"api/quote/{id}/approve", null);
+        if (!response.IsSuccessStatusCode) return null;
+        return await response.Content.ReadFromJsonAsync<QuoteDto>();
+    }
+
+    public async Task<QuoteDto?> RejectQuoteAsync(string id, string reason)
+    {
+        var response = await _http.PostAsJsonAsync($"api/quote/{id}/reject", new { Reason = reason });
+        if (!response.IsSuccessStatusCode) return null;
+        return await response.Content.ReadFromJsonAsync<QuoteDto>();
+    }
+
+    public async Task<InvoiceDto?> ConvertQuoteToInvoiceAsync(string id)
+    {
+        var response = await _http.PostAsync($"api/quote/{id}/convert", null);
+        if (!response.IsSuccessStatusCode) return null;
+        return await response.Content.ReadFromJsonAsync<InvoiceDto>();
+    }
+
     // Sync
     public async Task<SyncResponseDto?> SyncAsync(SyncRequestDto dto)
     {

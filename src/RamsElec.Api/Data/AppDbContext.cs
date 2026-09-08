@@ -15,6 +15,9 @@ public class AppDbContext : DbContext
     public DbSet<CompanyInfo> CompanyInfos => Set<CompanyInfo>();
     public DbSet<BankPaymentNotification> BankPaymentNotifications => Set<BankPaymentNotification>();
     public DbSet<PaymentMatch> PaymentMatches => Set<PaymentMatch>();
+    public DbSet<Quote> Quotes => Set<Quote>();
+    public DbSet<QuoteLineItem> QuoteLineItems => Set<QuoteLineItem>();
+    public DbSet<QuotePayment> QuotePayments => Set<QuotePayment>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -169,6 +172,89 @@ public class AppDbContext : DbContext
             entity.HasOne(e => e.Customer)
                   .WithMany(c => c.Jobs)
                   .HasForeignKey(e => e.CustomerId);
+        });
+
+        // Quote
+        modelBuilder.Entity<Quote>(entity =>
+        {
+            entity.ToTable("quotes");
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.QuoteNumber).HasColumnName("quote_number");
+            entity.Property(e => e.JobId).HasColumnName("job_id");
+            entity.Property(e => e.CustomerId).HasColumnName("customer_id");
+            entity.Property(e => e.Status).HasConversion<string>().HasColumnName("status");
+            entity.Property(e => e.PaymentStatus).HasColumnName("payment_status");
+            entity.Property(e => e.Subtotal).HasColumnType("decimal(12,2)");
+            entity.Property(e => e.VatRate).HasColumnName("vat_rate").HasColumnType("decimal(5,4)");
+            entity.Property(e => e.VatAmount).HasColumnName("vat_amount").HasColumnType("decimal(12,2)");
+            entity.Property(e => e.Total).HasColumnType("decimal(12,2)");
+            entity.Property(e => e.DepositAmount).HasColumnName("deposit_amount").HasColumnType("decimal(12,2)");
+            entity.Property(e => e.BalanceAmount).HasColumnName("balance_amount").HasColumnType("decimal(12,2)");
+            entity.Property(e => e.AmountPaid).HasColumnName("amount_paid").HasColumnType("decimal(12,2)");
+            entity.Property(e => e.PaymentReference).HasColumnName("payment_reference");
+            entity.Property(e => e.ExpiryDate).HasColumnName("expiry_date");
+            entity.Property(e => e.RejectionReason).HasColumnName("rejection_reason");
+            entity.Property(e => e.ApprovedAt).HasColumnName("approved_at");
+            entity.Property(e => e.PaidAt).HasColumnName("paid_at");
+            entity.Property(e => e.ConvertedToInvoiceAt).HasColumnName("converted_to_invoice_at");
+            entity.Property(e => e.ConvertedInvoiceId).HasColumnName("converted_invoice_id");
+            entity.Property(e => e.CreatedBy).HasColumnName("created_by");
+            entity.Property(e => e.CreatedAt).HasColumnName("created_at");
+            entity.Property(e => e.UpdatedAt).HasColumnName("updated_at");
+
+            entity.HasIndex(e => e.QuoteNumber).IsUnique();
+            entity.HasIndex(e => e.Status);
+            entity.HasIndex(e => e.CustomerId);
+            entity.HasIndex(e => e.PaymentReference);
+            entity.HasIndex(e => e.ExpiryDate);
+
+            entity.HasOne(e => e.Customer)
+                  .WithMany()
+                  .HasForeignKey(e => e.CustomerId);
+
+            entity.HasOne(e => e.Job)
+                  .WithMany()
+                  .HasForeignKey(e => e.JobId);
+
+            entity.HasMany(e => e.LineItems)
+                  .WithOne()
+                  .HasForeignKey(li => li.QuoteId)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasMany(e => e.QuotePayments)
+                  .WithOne()
+                  .HasForeignKey(p => p.QuoteId)
+                  .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        // QuoteLineItem
+        modelBuilder.Entity<QuoteLineItem>(entity =>
+        {
+            entity.ToTable("quote_line_items");
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.QuoteId).HasColumnName("quote_id");
+            entity.Property(e => e.Quantity).HasColumnType("decimal(10,2)");
+            entity.Property(e => e.UnitPrice).HasColumnName("unit_price").HasColumnType("decimal(12,2)");
+            entity.Property(e => e.Total).HasColumnType("decimal(12,2)");
+            entity.Property(e => e.SortOrder).HasColumnName("sort_order");
+            entity.Property(e => e.CreatedAt).HasColumnName("created_at");
+
+            entity.HasIndex(e => e.QuoteId);
+        });
+
+        // QuotePayment
+        modelBuilder.Entity<QuotePayment>(entity =>
+        {
+            entity.ToTable("quote_payments");
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.QuoteId).HasColumnName("quote_id");
+            entity.Property(e => e.Amount).HasColumnType("decimal(12,2)");
+            entity.Property(e => e.Reference).HasColumnName("reference");
+            entity.Property(e => e.PayerName).HasColumnName("payer_name");
+            entity.Property(e => e.BankNotificationId).HasColumnName("bank_notification_id");
+            entity.Property(e => e.RecordedAt).HasColumnName("recorded_at");
+
+            entity.HasIndex(e => e.QuoteId);
         });
 
         // CompanyInfo - singleton settings record

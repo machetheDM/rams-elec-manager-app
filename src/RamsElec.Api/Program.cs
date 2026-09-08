@@ -36,6 +36,7 @@ builder.Services.AddAuthorization();
 
 // Services
 builder.Services.AddScoped<InvoiceService>();
+builder.Services.AddScoped<QuoteService>();
 builder.Services.AddScoped<PdfService>();
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<CompanyInfoService>();

@@ -40,6 +40,9 @@ public static class MauiProgram
         builder.Services.AddTransient<InvoiceListViewModel>();
         builder.Services.AddTransient<InvoiceCreateViewModel>();
         builder.Services.AddTransient<InvoiceDetailViewModel>();
+        builder.Services.AddTransient<QuoteListViewModel>();
+        builder.Services.AddTransient<QuoteCreateViewModel>();
+        builder.Services.AddTransient<QuoteDetailViewModel>();
         builder.Services.AddTransient<CompanySettingsViewModel>();
         builder.Services.AddTransient<JobsViewModel>();
         builder.Services.AddTransient<PaymentsViewModel>();
@@ -51,6 +54,9 @@ public static class MauiProgram
         builder.Services.AddTransient<InvoiceListPage>();
         builder.Services.AddTransient<InvoiceCreatePage>();
         builder.Services.AddTransient<InvoiceDetailPage>();
+        builder.Services.AddTransient<QuoteListPage>();
+        builder.Services.AddTransient<QuoteCreatePage>();
+        builder.Services.AddTransient<QuoteDetailPage>();
         builder.Services.AddTransient<CompanySettingsPage>();
         builder.Services.AddTransient<JobsPage>();
         builder.Services.AddTransient<PaymentsPage>();

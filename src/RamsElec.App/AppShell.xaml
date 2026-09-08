@@ -16,6 +16,10 @@
             ContentTemplate="{DataTemplate views:JobsPage}" />
 
         <ShellContent
+            Title="Quotes"
+            ContentTemplate="{DataTemplate views:QuoteListPage}" />
+
+        <ShellContent
             Title="Invoices"
             ContentTemplate="{DataTemplate views:InvoiceListPage}" />
 

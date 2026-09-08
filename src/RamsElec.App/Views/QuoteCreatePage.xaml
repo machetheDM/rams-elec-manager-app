@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:RamsElec.App.ViewModels"
+    x:Class="RamsElec.App.Views.QuoteCreatePage"
+    x:DataType="vm:QuoteCreateViewModel"
+    Title="Create Quote"
+    BackgroundColor="#F5F5F5">
+
+    <ScrollView>
+        <VerticalStackLayout Spacing="15" Padding="15">
+            <Label Text="New Quote" FontSize="24" FontAttributes="Bold" TextColor="#1B2A4A" />
+
+            <Frame BackgroundColor="White" CornerRadius="8" Padding="10" HasShadow="True">
+                <VerticalStackLayout Spacing="5">
+                    <Label Text="Customer" FontAttributes="Bold" FontSize="13" TextColor="#666" />
+                    <Picker Title="Select customer" ItemsSource="{Binding Customers}" ItemDisplayBinding="{Binding Name}" SelectedItem="{Binding SelectedCustomer}" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <Frame BackgroundColor="White" CornerRadius="8" Padding="10" HasShadow="True">
+                <VerticalStackLayout Spacing="5">
+                    <Label Text="Expiry Date" FontAttributes="Bold" FontSize="13" TextColor="#666" />
+                    <DatePicker Date="{Binding ExpiryDate}" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <Frame BackgroundColor="White" CornerRadius="8" Padding="10" HasShadow="True">
+                <VerticalStackLayout Spacing="5">
+                    <Label Text="Deposit Amount (optional)" FontAttributes="Bold" FontSize="13" TextColor="#666" />
+                    <Entry Text="{Binding DepositAmount}" Placeholder="0.00" Keyboard="Numeric" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <Frame BackgroundColor="White" CornerRadius="8" Padding="10" HasShadow="True">
+                <VerticalStackLayout Spacing="8">
+                    <HorizontalStackLayout>
+                        <Label Text="Line Items" FontAttributes="Bold" FontSize="13" TextColor="#666" HorizontalOptions="Start" VerticalOptions="Center" />
+                        <Button Text="+ Add Item" Command="{Binding AddLineItemCommand}" BackgroundColor="#1B2A4A" TextColor="White" FontSize="12" HeightRequest="32" CornerRadius="4" />
+                    </HorizontalStackLayout>
+
+                    <CollectionView ItemsSource="{Binding LineItems}">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="vm:LineItemViewModel">
+                                <Frame Margin="0,4" Padding="8" CornerRadius="6" BackgroundColor="#F8F9FA" HasShadow="False">
+                                    <VerticalStackLayout Spacing="4">
+                                        <Entry Placeholder="Description" Text="{Binding Description}" />
+                                        <HorizontalStackLayout Spacing="8">
+                                            <Entry Placeholder="Qty" Text="{Binding Quantity}" Keyboard="Numeric" WidthRequest="60" />
+                                            <Entry Placeholder="Unit Price" Text="{Binding UnitPrice}" Keyboard="Numeric" WidthRequest="120" />
+                                            <Label Text="{Binding LineTotal, StringFormat='R{0:N2}'}" VerticalOptions="Center" TextColor="#1B2A4A" FontAttributes="Bold" />
+                                        </HorizontalStackLayout>
+                                    </VerticalStackLayout>
+                                </Frame>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </VerticalStackLayout>
+            </Frame>
+
+            <Frame BackgroundColor="#1B2A4A" CornerRadius="8" Padding="15" HasShadow="True">
+                <HorizontalStackLayout>
+                    <Label Text="TOTAL:" FontSize="18" FontAttributes="Bold" TextColor="White" HorizontalOptions="StartAndExpand" />
+                    <Label Text="{Binding Total, StringFormat='R{0:N2}'}" FontSize="18" FontAttributes="Bold" TextColor="#FFC107" />
+                </HorizontalStackLayout>
+            </Frame>
+
+            <Frame BackgroundColor="White" CornerRadius="8" Padding="10" HasShadow="True">
+                <VerticalStackLayout Spacing="5">
+                    <Label Text="Notes / Terms" FontAttributes="Bold" FontSize="13" TextColor="#666" />
+                    <Editor Text="{Binding Notes}" HeightRequest="80" Placeholder="Payment terms, special instructions..." />
+                </VerticalStackLayout>
+            </Frame>
+
+            <Button Text="Create Quote" Command="{Binding CreateQuoteCommand}" BackgroundColor="#FFC107" TextColor="#1B2A4A" FontAttributes="Bold" HeightRequest="50" CornerRadius="8" IsEnabled="{Binding IsBusy, Converter={StaticResource InvertedBoolConverter}}" />
+            <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" Color="#1B2A4A" />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

@@ -509,27 +509,30 @@ Build the parser with a sample, then refine.
 **Phase 1 scaffold complete.** `dotnet build RamsElec.sln` passes with 0 errors across all
 target frameworks (Android, iOS, Mac Catalyst, Windows).
 
-**Implemented (Phase 1 + 2 + 3 + 4):**
+**Implemented (Phase 1 + 2 + 3 + 4 + Quotes):**
 - [x] Solution structure: RamsElec.App + RamsElec.Api + RamsElec.Shared
-- [x] Shared models: Invoice, InvoiceLineItem, Payment, Customer, Job, CompanyInfo, BankPaymentNotification, PaymentMatch
-- [x] Shared enums: InvoiceStatus (8 states), PaymentMethod, DeliveryChannel
-- [x] Shared DTOs: CreateInvoice, Invoice, SendInvoice, RecordPayment, FnbPayment, Login, Sync, Analytics
+- [x] Shared models: Invoice, InvoiceLineItem, Payment, Customer, Job, CompanyInfo, BankPaymentNotification, PaymentMatch, Quote, QuoteLineItem, QuotePayment
+- [x] Shared enums: InvoiceStatus (8 states), PaymentMethod, DeliveryChannel, QuoteStatus
+- [x] Shared DTOs: CreateInvoice, Invoice, SendInvoice, RecordPayment, FnbPayment, Login, Sync, Analytics, Quote, CreateQuote, SendQuote
 - [x] API: EF Core DbContext with snake_case mappings, JWT auth, InvoiceService, AuthService
 - [x] API: QuestPDF PdfService with branded invoice template
-- [x] API: S3Service, TwilioService, WhatsAppService, PaymentService, OverdueInvoiceService
+- [x] API: S3Service, TwilioService, WhatsAppService, PaymentService, OverdueInvoiceService, QuoteService
 - [x] API: Microsoft Graph email reader (GraphMailReader) + MockMailReader for dev
 - [x] API: FNB payment email parser scaffold (must be verified with real FNB samples)
 - [x] API: PaymentMatchingService with confidence scoring and manager review queue
+- [x] API: Quote approval → payment reference → auto-convert to invoice on full payment
 - [x] API: PaymentAgentHostedService (scans inbox every 15 min)
-- [x] API: Controllers — Auth, Invoice, Customer, Job, Sync, Analytics, CompanyInfo, Payment, PaymentMatch, Health
+- [x] API: Controllers — Auth, Invoice, Quote, Customer, Job, Sync, Analytics, CompanyInfo, Payment, PaymentMatch, Health
 - [x] API: SMS/WhatsApp invoice delivery via presigned S3 URL
 - [x] API: EFT, cash, and FNB SpeedPoint payment recording
 - [x] API: Overdue invoice background service (6-hour checks)
+- [x] MAUI: Quotes tab with list, create, detail pages
 - [x] MAUI: InvoiceListPage with tappable items
 - [x] MAUI: InvoiceDetailPage with PDF preview, SMS/WhatsApp send, payment recording
 - [x] MAUI: FNB SpeedPoint payment dialog (approval code + last 4 digits)
 - [x] MAUI: Payment history on invoice detail
 - [x] MAUI: PaymentsPage for reviewing and approving auto-detected payment matches
+- [x] MAUI: Quote approve/reject/convert-to-invoice workflow
 - [x] Docker Compose (API + Postgres 16)
 - [x] Dockerfile for API
 - [x] GitHub repo: github.com/machetheDM/rams-elec-manager-app
