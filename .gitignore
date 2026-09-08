@@ -62,3 +62,4 @@ secrets.json
 *.bak
 *.swp
 *~.nib
+preview-invoice.pdf
