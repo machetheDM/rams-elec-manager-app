@@ -210,7 +210,7 @@ rams-elec-manager-app/
 │
 ├── tests/
 │   ├── RamsElec.App.Tests/
-│   ├── RamsElec.Api.Tests/
+│   ├── RamsElec.Api.Tests/           # xUnit + EF Core InMemory service tests
 │   └── RamsElec.Shared.Tests/
 │
 ├── docs/
@@ -246,6 +246,7 @@ rams-elec-manager-app/
 | Email Monitor | Microsoft Graph API | Read FNB payment emails |
 | Email Hosting | Microsoft 365 Business | @ramsatelec.co.za |
 | Auth | JWT Bearer | Issued by API, stored in SecureStorage |
+| API Tests | xUnit + EF Core InMemory | Service-level invoice, quote, and payment matching tests |
 
 ---
 
