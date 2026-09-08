@@ -24,6 +24,13 @@
                     <HorizontalStackLayout Spacing="8"><Label Text="Version:" TextColor="#666" /><Label Text="{Binding AppVersion}" /></HorizontalStackLayout>
                 </VerticalStackLayout>
             </Frame>
+            <Button Text="Company Settings"
+                    Command="{Binding GoToCompanySettingsCommand}"
+                    BackgroundColor="#1B2A4A"
+                    TextColor="White"
+                    FontAttributes="Bold"
+                    HeightRequest="50"
+                    CornerRadius="8" />
             <Button Text="Sign Out" Command="{Binding LogoutCommand}" BackgroundColor="#C62828" TextColor="White" FontAttributes="Bold" HeightRequest="50" CornerRadius="8" />
         </VerticalStackLayout>
     </ScrollView>

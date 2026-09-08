@@ -12,6 +12,7 @@ public class AppDbContext : DbContext
     public DbSet<Payment> Payments => Set<Payment>();
     public DbSet<Customer> Customers => Set<Customer>();
     public DbSet<Job> Jobs => Set<Job>();
+    public DbSet<CompanyInfo> CompanyInfos => Set<CompanyInfo>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -124,6 +125,13 @@ public class AppDbContext : DbContext
             entity.HasOne(e => e.Customer)
                   .WithMany(c => c.Jobs)
                   .HasForeignKey(e => e.CustomerId);
+        });
+
+        // CompanyInfo - singleton settings record
+        modelBuilder.Entity<CompanyInfo>(entity =>
+        {
+            entity.ToTable("company_info");
+            entity.HasKey(e => e.Id);
         });
     }
 }

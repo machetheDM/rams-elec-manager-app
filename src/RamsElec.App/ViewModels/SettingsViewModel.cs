@@ -37,4 +37,10 @@ public partial class SettingsViewModel : ObservableObject
             Application.Current.Windows[0].Page!.Handler!.MauiContext!.Services
                 .GetRequiredService<Views.LoginPage>());
     }
+
+    [RelayCommand]
+    private async Task GoToCompanySettingsAsync()
+    {
+        await Shell.Current.GoToAsync(nameof(Views.CompanySettingsPage));
+    }
 }

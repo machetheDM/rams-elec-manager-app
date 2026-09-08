@@ -72,4 +72,28 @@ public class InvoiceController : ControllerBase
         // TODO: Phase 3 — persist payment record, generate receipt
         return Ok(new { message = $"Invoice {invoice.InvoiceNumber} marked as paid" });
     }
+
+    [HttpPut("{id}")]
+    public async Task<IActionResult> UpdateInvoice(string id, [FromBody] CreateInvoiceDto dto)
+    {
+        var invoice = await _invoiceService.UpdateInvoice(id, dto);
+        if (invoice == null) return NotFound();
+        return Ok(invoice);
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteInvoice(string id)
+    {
+        var deleted = await _invoiceService.DeleteInvoice(id);
+        if (!deleted) return NotFound();
+        return NoContent();
+    }
+
+    [HttpPost("{id}/cancel")]
+    public async Task<IActionResult> CancelInvoice(string id)
+    {
+        var invoice = await _invoiceService.CancelInvoice(id);
+        if (invoice == null) return NotFound();
+        return Ok(invoice);
+    }
 }

@@ -20,7 +20,7 @@ public partial class InvoiceCreateViewModel : ObservableObject
 
     public ObservableCollection<Customer> Customers { get; } = [];
     public ObservableCollection<Job> CompletedJobs { get; } = [];
-    public ObservableCollection<CreateLineItemDto> LineItems { get; } = [];
+    public ObservableCollection<LineItemViewModel> LineItems { get; } = [];
 
     [ObservableProperty]
     private Customer? _selectedCustomer;
@@ -40,6 +40,9 @@ public partial class InvoiceCreateViewModel : ObservableObject
     [ObservableProperty]
     private decimal _total;
 
+    [ObservableProperty]
+    private string _statusMessage = string.Empty;
+
     [RelayCommand]
     private async Task LoadDataAsync()
     {
@@ -55,26 +58,33 @@ public partial class InvoiceCreateViewModel : ObservableObject
     [RelayCommand]
     private void AddLineItem()
     {
-        LineItems.Add(new CreateLineItemDto
+        var item = new LineItemViewModel
         {
             Description = "",
-            Quantity = 1,
-            UnitPrice = 0,
+            Quantity = "1",
+            UnitPrice = "0.00",
             Category = "service",
             SortOrder = LineItems.Count
-        });
+        };
+        item.PropertyChanged += (s, e) =>
+        {
+            if (e.PropertyName is nameof(LineItemViewModel.Quantity) or nameof(LineItemViewModel.UnitPrice))
+                RecalculateTotal();
+        };
+        LineItems.Add(item);
+        RecalculateTotal();
     }
 
     [RelayCommand]
-    private void RemoveLineItem(CreateLineItemDto item)
+    private void RemoveLineItem(LineItemViewModel item)
     {
         LineItems.Remove(item);
         RecalculateTotal();
     }
 
-    public void RecalculateTotal()
+    private void RecalculateTotal()
     {
-        Total = LineItems.Sum(li => li.Quantity * li.UnitPrice);
+        Total = LineItems.Sum(li => li.ParsedQuantity * li.ParsedUnitPrice);
     }
 
     [RelayCommand]
@@ -92,7 +102,14 @@ public partial class InvoiceCreateViewModel : ObservableObject
             return;
         }
 
+        if (LineItems.Any(li => li.ParsedQuantity <= 0 || li.ParsedUnitPrice < 0))
+        {
+            await Shell.Current.DisplayAlert("Error", "Please enter valid quantities and prices", "OK");
+            return;
+        }
+
         IsBusy = true;
+        StatusMessage = "Creating invoice...";
         try
         {
             var dto = new CreateInvoiceDto
@@ -101,7 +118,7 @@ public partial class InvoiceCreateViewModel : ObservableObject
                 JobId = SelectedJob?.Id,
                 DueDate = DueDate,
                 Notes = Notes,
-                LineItems = LineItems.ToList()
+                LineItems = LineItems.Select(li => li.ToDto()).ToList()
             };
 
             var result = await _apiClient.CreateInvoiceAsync(dto);
@@ -120,6 +137,7 @@ public partial class InvoiceCreateViewModel : ObservableObject
         finally
         {
             IsBusy = false;
+            StatusMessage = string.Empty;
         }
     }
 }

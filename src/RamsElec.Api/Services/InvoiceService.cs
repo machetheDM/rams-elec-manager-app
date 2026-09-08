@@ -126,6 +126,73 @@ public class InvoiceService
         return $"{prefix}{nextNumber:D4}";
     }
 
+    public async Task<bool> DeleteInvoice(string id)
+    {
+        var invoice = await _db.Invoices.FindAsync(id);
+        if (invoice == null) return false;
+
+        _db.Invoices.Remove(invoice);
+        await _db.SaveChangesAsync();
+        return true;
+    }
+
+    public async Task<Invoice?> UpdateInvoice(string id, CreateInvoiceDto dto)
+    {
+        var invoice = await _db.Invoices
+            .Include(i => i.LineItems)
+            .FirstOrDefaultAsync(i => i.Id == id);
+
+        if (invoice == null) return null;
+
+        _db.InvoiceLineItems.RemoveRange(invoice.LineItems);
+
+        invoice.CustomerId = dto.CustomerId;
+        invoice.JobId = dto.JobId;
+        invoice.QuoteId = dto.QuoteId;
+        invoice.DueDate = dto.DueDate;
+        invoice.Notes = dto.Notes;
+
+        invoice.LineItems = dto.LineItems.Select(li => new InvoiceLineItem
+        {
+            Id = GenerateCuid(),
+            Description = li.Description,
+            Quantity = li.Quantity,
+            UnitPrice = li.UnitPrice,
+            Total = li.Quantity * li.UnitPrice,
+            Category = li.Category,
+            SortOrder = li.SortOrder
+        }).ToList();
+
+        invoice.Subtotal = invoice.LineItems.Sum(li => li.Total);
+        invoice.Total = invoice.Subtotal;
+        invoice.UpdatedAt = DateTime.UtcNow;
+
+        await _db.SaveChangesAsync();
+        return invoice;
+    }
+
+    public async Task<Invoice?> MarkAsOverdue(string id)
+    {
+        var invoice = await _db.Invoices.FindAsync(id);
+        if (invoice == null) return null;
+
+        invoice.Status = InvoiceStatus.Overdue;
+        invoice.UpdatedAt = DateTime.UtcNow;
+        await _db.SaveChangesAsync();
+        return invoice;
+    }
+
+    public async Task<Invoice?> CancelInvoice(string id)
+    {
+        var invoice = await _db.Invoices.FindAsync(id);
+        if (invoice == null) return null;
+
+        invoice.Status = InvoiceStatus.Cancelled;
+        invoice.UpdatedAt = DateTime.UtcNow;
+        await _db.SaveChangesAsync();
+        return invoice;
+    }
+
     private static string GenerateCuid()
     {
         // Simple CUID-like ID compatible with Prisma's cuid() format

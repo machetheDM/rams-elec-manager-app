@@ -38,6 +38,8 @@ builder.Services.AddAuthorization();
 builder.Services.AddScoped<InvoiceService>();
 builder.Services.AddScoped<PdfService>();
 builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<CompanyInfoService>();
+builder.Services.AddScoped<AnalyticsService>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

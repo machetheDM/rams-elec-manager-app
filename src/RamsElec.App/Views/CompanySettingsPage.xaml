@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:RamsElec.App.ViewModels"
+    x:Class="RamsElec.App.Views.CompanySettingsPage"
+    x:DataType="vm:CompanySettingsViewModel"
+    Title="Company Settings"
+    BackgroundColor="#F5F5F5">
+
+    <ScrollView>
+        <VerticalStackLayout Spacing="12" Padding="15">
+
+            <Label Text="Company Settings" FontSize="24" FontAttributes="Bold" TextColor="#1B2A4A" />
+
+            <Frame BackgroundColor="White" CornerRadius="8" Padding="12" HasShadow="True">
+                <VerticalStackLayout Spacing="6">
+                    <Label Text="Company Details" FontAttributes="Bold" FontSize="16" TextColor="#1B2A4A" />
+                    <Entry Placeholder="Company Name" Text="{Binding Company.Name}" />
+                    <Entry Placeholder="Registration Number" Text="{Binding Company.Registration}" />
+                    <Entry Placeholder="Tax Number" Text="{Binding Company.TaxNumber}" />
+                    <Entry Placeholder="Physical Address" Text="{Binding Company.Address}" />
+                    <Entry Placeholder="Phone" Text="{Binding Company.Phone}" />
+                    <Entry Placeholder="Email" Text="{Binding Company.Email}" Keyboard="Email" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <Frame BackgroundColor="White" CornerRadius="8" Padding="12" HasShadow="True">
+                <VerticalStackLayout Spacing="6">
+                    <Label Text="Banking Details" FontAttributes="Bold" FontSize="16" TextColor="#1B2A4A" />
+                    <Entry Placeholder="Bank Name" Text="{Binding Company.BankName}" />
+                    <Entry Placeholder="Account Name" Text="{Binding Company.AccountName}" />
+                    <Entry Placeholder="Account Number" Text="{Binding Company.AccountNumber}" />
+                    <Entry Placeholder="Branch Code" Text="{Binding Company.BranchCode}" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <Frame BackgroundColor="White" CornerRadius="8" Padding="12" HasShadow="True">
+                <VerticalStackLayout Spacing="6">
+                    <Label Text="VAT Settings" FontAttributes="Bold" FontSize="16" TextColor="#1B2A4A" />
+                    <HorizontalStackLayout Spacing="10">
+                        <CheckBox IsChecked="{Binding Company.IsVatRegistered}" />
+                        <Label Text="VAT Registered" VerticalOptions="Center" TextColor="#666" />
+                    </HorizontalStackLayout>
+                    <Entry Placeholder="VAT Number" Text="{Binding Company.VatNumber}" IsEnabled="{Binding Company.IsVatRegistered}" />
+                    <Entry Placeholder="VAT Rate %" Text="{Binding VatRate}" Keyboard="Numeric" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <Button Text="Save Company Details"
+                    Command="{Binding SaveCompanyCommand}"
+                    BackgroundColor="#FFC107" TextColor="#1B2A4A"
+                    FontAttributes="Bold" HeightRequest="50" CornerRadius="8" />
+
+            <ActivityIndicator IsRunning="{Binding IsSaving}"
+                               IsVisible="{Binding IsSaving}" Color="#1B2A4A" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

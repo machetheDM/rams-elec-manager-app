@@ -2,6 +2,7 @@ namespace RamsElec.Shared.Models;
 
 public class CompanyInfo
 {
+    public string Id { get; set; } = "company";
     public string Name { get; set; } = "RAMS@ELEC (PTY) LTD";
     public string Registration { get; set; } = "2017/525813/07";
     public string TaxNumber { get; set; } = "9486744189";

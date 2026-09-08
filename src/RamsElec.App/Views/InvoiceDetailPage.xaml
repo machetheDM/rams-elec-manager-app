@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:RamsElec.App.ViewModels"
+    x:Class="RamsElec.App.Views.InvoiceDetailPage"
+    x:DataType="vm:InvoiceDetailViewModel"
+    Title="Invoice Details"
+    BackgroundColor="#F5F5F5">
+
+    <ScrollView>
+        <VerticalStackLayout Spacing="15" Padding="15">
+
+            <Label Text="Invoice Details" FontSize="24" FontAttributes="Bold" TextColor="#1B2A4A" />
+
+            <Frame BackgroundColor="White" CornerRadius="8" Padding="15" HasShadow="True"
+                   IsVisible="{Binding Invoice, Converter={StaticResource ObjectToBoolConverter}}">
+                <VerticalStackLayout Spacing="8">
+                    <HorizontalStackLayout>
+                        <Label Text="Invoice #:" FontAttributes="Bold" WidthRequest="100" TextColor="#666" />
+                        <Label Text="{Binding Invoice.InvoiceNumber}" FontAttributes="Bold" TextColor="#1B2A4A" />
+                    </HorizontalStackLayout>
+                    <HorizontalStackLayout>
+                        <Label Text="Customer:" FontAttributes="Bold" WidthRequest="100" TextColor="#666" />
+                        <Label Text="{Binding Invoice.CustomerName}" />
+                    </HorizontalStackLayout>
+                    <HorizontalStackLayout>
+                        <Label Text="Status:" FontAttributes="Bold" WidthRequest="100" TextColor="#666" />
+                        <Label Text="{Binding Invoice.Status}" />
+                    </HorizontalStackLayout>
+                    <HorizontalStackLayout>
+                        <Label Text="Due Date:" FontAttributes="Bold" WidthRequest="100" TextColor="#666" />
+                        <Label Text="{Binding Invoice.DueDate, StringFormat='{0:dd/MM/yyyy}'}" />
+                    </HorizontalStackLayout>
+                    <HorizontalStackLayout>
+                        <Label Text="Total:" FontAttributes="Bold" WidthRequest="100" TextColor="#666" />
+                        <Label Text="{Binding Invoice.Total, StringFormat='R{0:N2}'}" FontAttributes="Bold" TextColor="#1B2A4A" />
+                    </HorizontalStackLayout>
+                </VerticalStackLayout>
+            </Frame>
+
+            <Button Text="Generate / Preview PDF"
+                    Command="{Binding GeneratePdfCommand}"
+                    BackgroundColor="#1B2A4A" TextColor="White"
+                    FontAttributes="Bold" HeightRequest="50" CornerRadius="8" />
+
+            <Frame BackgroundColor="White" CornerRadius="8" Padding="10" HasShadow="True"
+                   IsVisible="{Binding PdfBytes, Converter={StaticResource ObjectToBoolConverter}}">
+                <Image Source="{Binding PdfBytes}"
+                       Aspect="AspectFit"
+                       HeightRequest="600" />
+            </Frame>
+
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+                <Button Grid.Column="0" Text="Send SMS"
+                        Command="{Binding SendInvoiceCommand}"
+                        CommandParameter="Sms"
+                        BackgroundColor="#FFC107" TextColor="#1B2A4A"
+                        FontAttributes="Bold" HeightRequest="50" CornerRadius="8" />
+                <Button Grid.Column="1" Text="Send WhatsApp"
+                        Command="{Binding SendInvoiceCommand}"
+                        CommandParameter="WhatsApp"
+                        BackgroundColor="#25D366" TextColor="White"
+                        FontAttributes="Bold" HeightRequest="50" CornerRadius="8" />
+            </Grid>
+
+            <Button Text="Record Payment"
+                    Command="{Binding RecordPaymentCommand}"
+                    BackgroundColor="#2E7D32" TextColor="White"
+                    FontAttributes="Bold" HeightRequest="50" CornerRadius="8" />
+
+            <ActivityIndicator IsRunning="{Binding IsLoading}"
+                               IsVisible="{Binding IsLoading}" Color="#1B2A4A" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

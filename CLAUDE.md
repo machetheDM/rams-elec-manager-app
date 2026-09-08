@@ -89,10 +89,16 @@ happens later, add a toggle in company settings — do not hardcode VAT assumpti
 │  │  ├─ ApiClient    │     │  └─ PaymentController            │  │
 │  │  └─ LocalDb      │     │                                  │  │
 │  │     (SQLite)     │     │  Services:                       │  │
-│  └──────────────────┘     │  ├─ S3Service (PDF upload)       │  │
+│  └──────────────────┘     │  ├─ AuthService                  │  │
+│                           │  ├─ InvoiceService               │  │
+│                           │  ├─ PdfService                   │  │
+│                           │  ├─ CompanyInfoService           │  │
+│                           │  ├─ AnalyticsService             │  │
+│                           │  ├─ S3Service (PDF upload)       │  │
 │                           │  ├─ TwilioService (SMS)          │  │
 │                           │  ├─ GraphService (email monitor) │  │
-│                           │  └─ WhatsAppService (n8n trigger)│  │
+│                           │  ├─ WhatsAppService (n8n trigger)│  │
+│                           │  └─ PaymentMatchingService       │  │
 │                           └───────────────┬──────────────────┘  │
 │                                           │                     │
 └───────────────────────────────────────────┼─────────────────────┘
@@ -171,6 +177,11 @@ rams-elec-manager-app/
 │   │   │   ├── SyncController.cs
 │   │   │   └── PaymentController.cs
 │   │   ├── Services/
+│   │   │   ├── AuthService.cs        # JWT token generation
+│   │   │   ├── InvoiceService.cs     # Invoice CRUD and status lifecycle
+│   │   │   ├── PdfService.cs         # QuestPDF invoice generation
+│   │   │   ├── CompanyInfoService.cs # Company settings persistence
+│   │   │   ├── AnalyticsService.cs   # Dashboard KPI aggregation
 │   │   │   ├── S3Service.cs          # PDF upload, presigned URLs
 │   │   │   ├── TwilioService.cs      # SMS invoice delivery
 │   │   │   ├── GraphService.cs       # M365 email monitoring
@@ -498,21 +509,23 @@ Build the parser with a sample, then refine.
 **Phase 1 scaffold complete.** `dotnet build RamsElec.sln` passes with 0 errors across all
 target frameworks (Android, iOS, Mac Catalyst, Windows).
 
-**Implemented (Phase 1):**
+**Implemented (Phase 1 + 2):**
 - [x] Solution structure: RamsElec.App + RamsElec.Api + RamsElec.Shared
 - [x] Shared models: Invoice, InvoiceLineItem, Payment, Customer, Job, CompanyInfo
-- [x] Shared enums: InvoiceStatus (7 states), PaymentMethod, DeliveryChannel
+- [x] Shared enums: InvoiceStatus (8 states), PaymentMethod, DeliveryChannel
 - [x] Shared DTOs: CreateInvoice, Invoice, SendInvoice, RecordPayment, Login, Sync, Analytics
 - [x] API: EF Core DbContext with snake_case mappings, JWT auth, InvoiceService, AuthService
 - [x] API: QuestPDF PdfService with branded invoice template (navy header, structured tables)
-- [x] API: AuthController, InvoiceController (CRUD + PDF + send + pay), HealthController
+- [x] API: Controllers — Auth, Invoice, Customer, Job, Sync, Analytics, CompanyInfo, Health
 - [x] API: Swagger/OpenAPI, CORS for MAUI, development DB seeding
+- [x] API: CompanyInfoService and AnalyticsService
 - [x] MAUI: Shell tab navigation (Dashboard, Jobs, Invoices, Settings)
 - [x] MAUI: LoginPage with branded UI, secure JWT storage
 - [x] MAUI: DashboardPage with KPI cards, sync status
 - [x] MAUI: JobsPage with list from local SQLite
-- [x] MAUI: InvoiceListPage + InvoiceCreatePage with line items
-- [x] MAUI: SettingsPage with account info and logout
+- [x] MAUI: InvoiceListPage + InvoiceCreatePage with editable line items and live totals
+- [x] MAUI: InvoiceDetailPage with PDF generation, send SMS/WhatsApp, record payment
+- [x] MAUI: SettingsPage + CompanySettingsPage (banking, VAT toggle)
 - [x] MAUI: SQLite LocalDatabase with customer/job/invoice tables
 - [x] MAUI: ApiClient with Android/localhost base URL handling
 - [x] MAUI: SyncService (pull customers + jobs from API)
@@ -521,7 +534,7 @@ target frameworks (Android, iOS, Mac Catalyst, Windows).
 - [x] GitHub repo: github.com/machetheDM/rams-elec-manager-app
 
 **Not yet implemented:**
-- Phase 2: Invoice CRUD end-to-end, PDF preview, quote-to-invoice, company settings
+- Phase 3: SMS/WhatsApp delivery, S3 upload, FNB SpeedPoint recording
 - Phase 3: SMS/WhatsApp delivery, S3 upload, FNB SpeedPoint recording
 - Phase 4: Microsoft Graph email monitoring, payment matching agent
 - Phase 5: LiveCharts2 analytics pages
