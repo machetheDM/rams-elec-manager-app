@@ -3,7 +3,6 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:vm="clr-namespace:RamsElec.App.ViewModels"
-    xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
     x:Class="RamsElec.App.Views.DashboardPage"
     x:DataType="vm:DashboardViewModel"
     Title="Dashboard"
@@ -29,20 +28,14 @@
             <Frame BackgroundColor="White" CornerRadius="8" Padding="10" HasShadow="True">
                 <VerticalStackLayout Spacing="8">
                     <Label Text="Revenue by Month" FontSize="16" FontAttributes="Bold" TextColor="#1B2A4A" />
-                    <lvc:CartesianChart
-                        Series="{Binding RevenueSeries}"
-                        XAxes="{Binding RevenueXAxes}"
-                        YAxes="{Binding RevenueYAxes}"
-                        HeightRequest="250" />
+                    <Label Text="Charts are temporarily disabled while the chart control is being stabilised." TextColor="#666" FontSize="13" />
                 </VerticalStackLayout>
             </Frame>
 
             <Frame BackgroundColor="White" CornerRadius="8" Padding="10" HasShadow="True">
                 <VerticalStackLayout Spacing="8">
                     <Label Text="Jobs by Status" FontSize="16" FontAttributes="Bold" TextColor="#1B2A4A" />
-                    <lvc:PieChart
-                        Series="{Binding JobsByStatusSeries}"
-                        HeightRequest="250" />
+                    <Label Text="Charts are temporarily disabled while the chart control is being stabilised." TextColor="#666" FontSize="13" />
                 </VerticalStackLayout>
             </Frame>
         </VerticalStackLayout>

@@ -1,4 +1,6 @@
-﻿using RamsElec.App.Services;
+﻿using Microsoft.Extensions.DependencyInjection;
+using RamsElec.App.Services;
+using RamsElec.App.Views;
 
 namespace RamsElec.App;
 
@@ -11,6 +13,24 @@ public partial class App : Application
 
     protected override Window CreateWindow(IActivationState? activationState)
     {
-        return new Window(new AppShell());
+        MauiProgram.Log("CreateWindow start");
+        try
+        {
+#if WINDOWS
+            var dashboard = MauiProgram.Services?.GetRequiredService<DashboardPage>();
+            var window = new Window(new NavigationPage(dashboard));
+            MauiProgram.Log("CreateWindow success (Windows NavigationPage)");
+            return window;
+#else
+            var window = new Window(new AppShell());
+            MauiProgram.Log("CreateWindow success");
+            return window;
+#endif
+        }
+        catch (Exception ex)
+        {
+            MauiProgram.Log($"CreateWindow error: {ex}");
+            throw;
+        }
     }
 }
