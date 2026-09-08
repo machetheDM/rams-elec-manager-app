@@ -45,6 +45,14 @@ public class QuoteController : ControllerBase
         return CreatedAtAction(nameof(GetQuote), new { id = quote.Id }, quote);
     }
 
+    [HttpPost("{id}/send")]
+    public async Task<IActionResult> SendQuote(string id)
+    {
+        var quote = await _quoteService.SendQuoteAsync(id);
+        if (quote == null) return NotFound();
+        return Ok(new { quote.Id, quote.QuoteNumber, quote.ApprovalToken });
+    }
+
     [HttpPost("{id}/approve")]
     public async Task<IActionResult> ApproveQuote(string id)
     {

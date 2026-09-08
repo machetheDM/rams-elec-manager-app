@@ -81,6 +81,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseCors("MauiApp");
 app.UseAuthentication();
+app.UseStaticFiles();
 app.UseAuthorization();
 app.MapControllers();
 

@@ -510,7 +510,7 @@ Build the parser with a sample, then refine.
 **Phase 1 scaffold complete.** `dotnet build RamsElec.sln` passes with 0 errors across all
 target frameworks (Android, iOS, Mac Catalyst, Windows).
 
-**Implemented (Phase 1 + 2 + 3 + 4 + Quotes):**
+**Implemented (Phase 1–6):**
 - [x] Solution structure: RamsElec.App + RamsElec.Api + RamsElec.Shared
 - [x] Shared models: Invoice, InvoiceLineItem, Payment, Customer, Job, CompanyInfo, BankPaymentNotification, PaymentMatch, Quote, QuoteLineItem, QuotePayment
 - [x] Shared enums: InvoiceStatus (8 states), PaymentMethod, DeliveryChannel, QuoteStatus
@@ -536,12 +536,20 @@ target frameworks (Android, iOS, Mac Catalyst, Windows).
 - [x] MAUI: Quote approve/reject/convert-to-invoice workflow
 - [x] MAUI: Analytics tab with LiveCharts2 bar and pie charts
 - [x] MAUI: Dashboard charts (revenue by month, jobs by status)
+- [x] API: Client-facing quote approval web page (`/quote-approval?token=...`)
+- [x] API: Quote approval tokens and `POST /api/quote/{id}/send`
+- [x] Tests: xUnit project with 7 passing tests for Invoice, Quote, and PaymentMatching services
+- [x] DevOps: GitHub Actions CI for API/Shared and MAUI/solution builds
+- [x] DevOps: Docker healthchecks and `docker-compose.prod.yml` with `.env.example`
+- [x] Docs: `docs/deployment.md` with Windows/Android build instructions
 - [x] Docker Compose (API + Postgres 16)
 - [x] Dockerfile for API
 - [x] GitHub repo: github.com/machetheDM/rams-elec-manager-app
 
 **Not yet implemented:**
-- Phase 6: App store prep (Google Play / TestFlight), production push credentials
+- Google Play / TestFlight submission
+- Production FCM/APNs push credentials
+- Signed release artifacts (MSIX, APK)
 
 **Known warnings (harmless):**
 - MVVMTK0045: CommunityToolkit.Mvvm suggests partial properties for WinRT AOT compat.

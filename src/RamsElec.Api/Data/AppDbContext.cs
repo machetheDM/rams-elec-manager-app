@@ -180,6 +180,7 @@ public class AppDbContext : DbContext
             entity.ToTable("quotes");
             entity.HasKey(e => e.Id);
             entity.Property(e => e.QuoteNumber).HasColumnName("quote_number");
+            entity.Property(e => e.ApprovalToken).HasColumnName("approval_token");
             entity.Property(e => e.JobId).HasColumnName("job_id");
             entity.Property(e => e.CustomerId).HasColumnName("customer_id");
             entity.Property(e => e.Status).HasConversion<string>().HasColumnName("status");
@@ -203,6 +204,7 @@ public class AppDbContext : DbContext
             entity.Property(e => e.UpdatedAt).HasColumnName("updated_at");
 
             entity.HasIndex(e => e.QuoteNumber).IsUnique();
+            entity.HasIndex(e => e.ApprovalToken);
             entity.HasIndex(e => e.Status);
             entity.HasIndex(e => e.CustomerId);
             entity.HasIndex(e => e.PaymentReference);

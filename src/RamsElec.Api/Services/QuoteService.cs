@@ -53,6 +53,8 @@ public class QuoteService
             LineItems = lineItems
         };
 
+        quote.ApprovalToken = GenerateCuid();
+
         _db.Quotes.Add(quote);
         await _db.SaveChangesAsync();
         return quote;
@@ -80,6 +82,30 @@ public class QuoteService
             .Include(q => q.Job)
             .Include(q => q.QuotePayments)
             .FirstOrDefaultAsync(q => q.Id == id);
+    }
+
+    public async Task<Quote?> SendQuoteAsync(string id)
+    {
+        var quote = await _db.Quotes.FindAsync(id);
+        if (quote == null) return null;
+
+        if (string.IsNullOrEmpty(quote.ApprovalToken))
+        {
+            quote.ApprovalToken = GenerateCuid();
+        }
+
+        quote.Status = QuoteStatus.Sent;
+        quote.UpdatedAt = DateTime.UtcNow;
+        await _db.SaveChangesAsync();
+        return quote;
+    }
+
+    public async Task<Quote?> GetQuoteByTokenAsync(string token)
+    {
+        return await _db.Quotes
+            .Include(q => q.LineItems)
+            .Include(q => q.Customer)
+            .FirstOrDefaultAsync(q => q.ApprovalToken == token);
     }
 
     public async Task<Quote?> ApproveQuoteAsync(string id, string? paymentReference = null)

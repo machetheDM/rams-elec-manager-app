@@ -6,6 +6,7 @@ public class Quote
 {
     public string Id { get; set; } = string.Empty;
     public string QuoteNumber { get; set; } = string.Empty;
+    public string ApprovalToken { get; set; } = string.Empty;
     public string? JobId { get; set; }
     public string CustomerId { get; set; } = string.Empty;
     public QuoteStatus Status { get; set; } = QuoteStatus.Draft;
