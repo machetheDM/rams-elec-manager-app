@@ -1,0 +1,67 @@
+name: .NET MAUI + API CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  build-api:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Restore
+        run: dotnet restore src/RamsElec.Api/RamsElec.Api.csproj
+
+      - name: Build API
+        run: dotnet build src/RamsElec.Api/RamsElec.Api.csproj --no-restore --configuration Release
+
+      - name: Build Shared
+        run: dotnet build src/RamsElec.Shared/RamsElec.Shared.csproj --no-restore --configuration Release
+
+  build-maui:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Install MAUI workloads
+        run: |
+          dotnet workload install maui
+
+      - name: Restore
+        run: dotnet restore src/RamsElec.App/RamsElec.App.csproj
+
+      - name: Build MAUI (Windows)
+        run: dotnet build src/RamsElec.App/RamsElec.App.csproj -f net9.0-windows10.0.19041.0 --no-restore --configuration Release
+
+  build-sln:
+    runs-on: windows-latest
+    needs: [build-api]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Install MAUI workloads
+        run: dotnet workload install maui
+
+      - name: Restore
+        run: dotnet restore RamsElec.sln
+
+      - name: Build Solution
+        run: dotnet build RamsElec.sln --no-restore --configuration Release

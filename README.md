@@ -1,5 +1,7 @@
 # Rams @Elec Manager App
 
+[![.NET MAUI + API CI](https://github.com/machetheDM/rams-elec-manager-app/actions/workflows/ci.yml/badge.svg)](https://github.com/machetheDM/rams-elec-manager-app/actions/workflows/ci.yml)
+
 A tablet/phone companion app for **Rams @Elec (Pty) Ltd** — a South African electrical &
 refrigeration services company. Built with **.NET MAUI** (C#) and **ASP.NET Core**.
 

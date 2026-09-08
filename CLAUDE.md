@@ -540,7 +540,7 @@ target frameworks (Android, iOS, Mac Catalyst, Windows).
 - [x] GitHub repo: github.com/machetheDM/rams-elec-manager-app
 
 **Not yet implemented:**
-- Phase 6: Push notifications, CI pipeline, app store prep
+- Phase 6: App store prep (Google Play / TestFlight), production push credentials
 
 **Known warnings (harmless):**
 - MVVMTK0045: CommunityToolkit.Mvvm suggests partial properties for WinRT AOT compat.

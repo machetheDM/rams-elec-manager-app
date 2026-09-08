@@ -33,6 +33,7 @@ public static class MauiProgram
         builder.Services.AddSingleton<ApiClient>();
         builder.Services.AddSingleton<AuthService>();
         builder.Services.AddSingleton<SyncService>();
+        builder.Services.AddSingleton<IPushNotificationService, PushNotificationService>();
 
         // ViewModels
         builder.Services.AddTransient<LoginViewModel>();
