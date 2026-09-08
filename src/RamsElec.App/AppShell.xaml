@@ -20,6 +20,10 @@
             ContentTemplate="{DataTemplate views:InvoiceListPage}" />
 
         <ShellContent
+            Title="Payments"
+            ContentTemplate="{DataTemplate views:PaymentsPage}" />
+
+        <ShellContent
             Title="Settings"
             ContentTemplate="{DataTemplate views:SettingsPage}" />
     </TabBar>

@@ -44,7 +44,11 @@ builder.Services.AddScoped<S3Service>();
 builder.Services.AddScoped<TwilioService>();
 builder.Services.AddScoped<WhatsAppService>();
 builder.Services.AddScoped<PaymentService>();
+builder.Services.AddSingleton<IMailReader, MockMailReader>(); // or GraphMailReader when configured
+builder.Services.AddScoped<IBankEmailParser, FnbPaymentNotificationParser>();
+builder.Services.AddScoped<PaymentMatchingService>();
 builder.Services.AddHostedService<OverdueInvoiceService>();
+builder.Services.AddHostedService<PaymentAgentHostedService>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

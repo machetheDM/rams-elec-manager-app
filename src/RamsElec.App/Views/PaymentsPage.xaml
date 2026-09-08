@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:RamsElec.App.ViewModels"
+    xmlns:models="clr-namespace:RamsElec.Shared.Models;assembly=RamsElec.Shared"
+    x:Class="RamsElec.App.Views.PaymentsPage"
+    x:DataType="vm:PaymentsViewModel"
+    Title="Payment Matches"
+    BackgroundColor="#F5F5F5">
+
+    <Grid RowDefinitions="Auto,*" Padding="15" RowSpacing="10">
+
+        <VerticalStackLayout Grid.Row="0" Spacing="5">
+            <Label Text="Payment Matches" FontSize="24" FontAttributes="Bold" TextColor="#1B2A4A" />
+            <Label Text="{Binding StatusMessage}" TextColor="#666" FontSize="13" />
+            <Button Text="Refresh"
+                    Command="{Binding LoadMatchesCommand}"
+                    BackgroundColor="#1B2A4A" TextColor="White"
+                    FontSize="12" HeightRequest="35" CornerRadius="4" />
+        </VerticalStackLayout>
+
+        <CollectionView Grid.Row="1"
+                        ItemsSource="{Binding PendingMatches}"
+                        EmptyView="No pending payment matches. The agent runs every 15 minutes.">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:PaymentMatch">
+                    <Frame Margin="0,5" Padding="12" CornerRadius="8" BackgroundColor="White" HasShadow="True">
+                        <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto,Auto">
+                            <Label Grid.Row="0" Grid.Column="0" Text="{Binding BankPayment.PayerName}" FontSize="14" FontAttributes="Bold" TextColor="#1B2A4A" />
+                            <Label Grid.Row="0" Grid.Column="1" Text="{Binding BankPayment.Amount, StringFormat='R{0:N2}'}" FontAttributes="Bold" TextColor="#2E7D32" />
+                            <Label Grid.Row="1" Grid.Column="0" Text="{Binding Invoice.InvoiceNumber}" FontSize="13" TextColor="#666" />
+                            <Label Grid.Row="1" Grid.Column="1" Text="{Binding Confidence, StringFormat='{0:P0}'}" FontSize="13" TextColor="#666" />
+                            <Label Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding ReviewReason}" FontSize="11" TextColor="#999" />
+                            <HorizontalStackLayout Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Spacing="10" Padding="0,8,0,0">
+                                <Button Text="Approve" Command="{Binding Source={RelativeSource AncestorType={x:Type vm:PaymentsViewModel}}, Path=ApproveCommand}" CommandParameter="{Binding .}" BackgroundColor="#2E7D32" TextColor="White" FontSize="12" HeightRequest="32" CornerRadius="4" />
+                                <Button Text="Reject" Command="{Binding Source={RelativeSource AncestorType={x:Type vm:PaymentsViewModel}}, Path=RejectCommand}" CommandParameter="{Binding .}" BackgroundColor="#C62828" TextColor="White" FontSize="12" HeightRequest="32" CornerRadius="4" />
+                            </HorizontalStackLayout>
+                        </Grid>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <ActivityIndicator Grid.Row="1" IsRunning="{Binding IsLoading}" IsVisible="{Binding IsLoading}" Color="#1B2A4A" />
+
+    </Grid>
+
+</ContentPage>

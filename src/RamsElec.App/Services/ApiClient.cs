@@ -139,4 +139,22 @@ public class ApiClient
         var response = await _http.PostAsJsonAsync("api/payment/fnb", dto);
         return response.IsSuccessStatusCode;
     }
+
+    // Payment matching review
+    public async Task<List<PaymentMatch>> GetPendingPaymentMatchesAsync()
+    {
+        return await _http.GetFromJsonAsync<List<PaymentMatch>>("api/paymentmatch/pending") ?? [];
+    }
+
+    public async Task<bool> ApprovePaymentMatchAsync(string id)
+    {
+        var response = await _http.PostAsync($"api/paymentmatch/{id}/approve", null);
+        return response.IsSuccessStatusCode;
+    }
+
+    public async Task<bool> RejectPaymentMatchAsync(string id, string reason)
+    {
+        var response = await _http.PostAsJsonAsync($"api/paymentmatch/{id}/reject", new { Reason = reason });
+        return response.IsSuccessStatusCode;
+    }
 }

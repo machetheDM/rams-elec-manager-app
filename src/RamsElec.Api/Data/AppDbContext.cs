@@ -13,9 +13,53 @@ public class AppDbContext : DbContext
     public DbSet<Customer> Customers => Set<Customer>();
     public DbSet<Job> Jobs => Set<Job>();
     public DbSet<CompanyInfo> CompanyInfos => Set<CompanyInfo>();
+    public DbSet<BankPaymentNotification> BankPaymentNotifications => Set<BankPaymentNotification>();
+    public DbSet<PaymentMatch> PaymentMatches => Set<PaymentMatch>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        // Bank payment notifications
+        modelBuilder.Entity<BankPaymentNotification>(entity =>
+        {
+            entity.ToTable("bank_payment_notifications");
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.SourceEmailId).HasColumnName("source_email_id");
+            entity.Property(e => e.RawSubject).HasColumnName("raw_subject");
+            entity.Property(e => e.RawBody).HasColumnName("raw_body");
+            entity.Property(e => e.PayerName).HasColumnName("payer_name");
+            entity.Property(e => e.Reference).HasColumnName("reference");
+            entity.Property(e => e.Amount).HasColumnName("amount").HasColumnType("decimal(12,2)");
+            entity.Property(e => e.PaymentDate).HasColumnName("payment_date");
+            entity.Property(e => e.BankName).HasColumnName("bank_name");
+            entity.Property(e => e.ReceivedAt).HasColumnName("received_at");
+            entity.Property(e => e.CreatedAt).HasColumnName("created_at");
+            entity.HasIndex(e => e.Reference);
+            entity.HasIndex(e => e.Amount);
+        });
+
+        // Payment matches for manager review
+        modelBuilder.Entity<PaymentMatch>(entity =>
+        {
+            entity.ToTable("payment_matches");
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.InvoiceId).HasColumnName("invoice_id");
+            entity.Property(e => e.BankPaymentId).HasColumnName("bank_payment_id");
+            entity.Property(e => e.Confidence).HasColumnName("confidence").HasColumnType("decimal(3,2)");
+            entity.Property(e => e.Status).HasColumnName("status");
+            entity.Property(e => e.MatchedBy).HasColumnName("matched_by");
+            entity.Property(e => e.ReviewReason).HasColumnName("review_reason");
+            entity.Property(e => e.ReviewedAt).HasColumnName("reviewed_at");
+            entity.Property(e => e.CreatedAt).HasColumnName("created_at");
+
+            entity.HasIndex(e => e.Status);
+            entity.HasOne(e => e.Invoice)
+                  .WithMany()
+                  .HasForeignKey(e => e.InvoiceId);
+            entity.HasOne(e => e.BankPayment)
+                  .WithMany()
+                  .HasForeignKey(e => e.BankPaymentId);
+        });
+
         // Invoice
         modelBuilder.Entity<Invoice>(entity =>
         {

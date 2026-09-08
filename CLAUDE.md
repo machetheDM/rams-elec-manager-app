@@ -509,15 +509,19 @@ Build the parser with a sample, then refine.
 **Phase 1 scaffold complete.** `dotnet build RamsElec.sln` passes with 0 errors across all
 target frameworks (Android, iOS, Mac Catalyst, Windows).
 
-**Implemented (Phase 1 + 2 + 3):**
+**Implemented (Phase 1 + 2 + 3 + 4):**
 - [x] Solution structure: RamsElec.App + RamsElec.Api + RamsElec.Shared
-- [x] Shared models: Invoice, InvoiceLineItem, Payment, Customer, Job, CompanyInfo
+- [x] Shared models: Invoice, InvoiceLineItem, Payment, Customer, Job, CompanyInfo, BankPaymentNotification, PaymentMatch
 - [x] Shared enums: InvoiceStatus (8 states), PaymentMethod, DeliveryChannel
 - [x] Shared DTOs: CreateInvoice, Invoice, SendInvoice, RecordPayment, FnbPayment, Login, Sync, Analytics
 - [x] API: EF Core DbContext with snake_case mappings, JWT auth, InvoiceService, AuthService
 - [x] API: QuestPDF PdfService with branded invoice template
 - [x] API: S3Service, TwilioService, WhatsAppService, PaymentService, OverdueInvoiceService
-- [x] API: Controllers — Auth, Invoice, Customer, Job, Sync, Analytics, CompanyInfo, Payment, Health
+- [x] API: Microsoft Graph email reader (GraphMailReader) + MockMailReader for dev
+- [x] API: FNB payment email parser scaffold (must be verified with real FNB samples)
+- [x] API: PaymentMatchingService with confidence scoring and manager review queue
+- [x] API: PaymentAgentHostedService (scans inbox every 15 min)
+- [x] API: Controllers — Auth, Invoice, Customer, Job, Sync, Analytics, CompanyInfo, Payment, PaymentMatch, Health
 - [x] API: SMS/WhatsApp invoice delivery via presigned S3 URL
 - [x] API: EFT, cash, and FNB SpeedPoint payment recording
 - [x] API: Overdue invoice background service (6-hour checks)
@@ -525,12 +529,12 @@ target frameworks (Android, iOS, Mac Catalyst, Windows).
 - [x] MAUI: InvoiceDetailPage with PDF preview, SMS/WhatsApp send, payment recording
 - [x] MAUI: FNB SpeedPoint payment dialog (approval code + last 4 digits)
 - [x] MAUI: Payment history on invoice detail
+- [x] MAUI: PaymentsPage for reviewing and approving auto-detected payment matches
 - [x] Docker Compose (API + Postgres 16)
 - [x] Dockerfile for API
 - [x] GitHub repo: github.com/machetheDM/rams-elec-manager-app
 
 **Not yet implemented:**
-- Phase 4: Microsoft Graph email monitoring, payment matching agent
 - Phase 5: LiveCharts2 analytics pages
 - Phase 6: Push notifications, CI pipeline, app store prep
 
