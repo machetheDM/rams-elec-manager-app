@@ -533,12 +533,13 @@ target frameworks (Android, iOS, Mac Catalyst, Windows).
 - [x] MAUI: Payment history on invoice detail
 - [x] MAUI: PaymentsPage for reviewing and approving auto-detected payment matches
 - [x] MAUI: Quote approve/reject/convert-to-invoice workflow
+- [x] MAUI: Analytics tab with LiveCharts2 bar and pie charts
+- [x] MAUI: Dashboard charts (revenue by month, jobs by status)
 - [x] Docker Compose (API + Postgres 16)
 - [x] Dockerfile for API
 - [x] GitHub repo: github.com/machetheDM/rams-elec-manager-app
 
 **Not yet implemented:**
-- Phase 5: LiveCharts2 analytics pages
 - Phase 6: Push notifications, CI pipeline, app store prep
 
 **Known warnings (harmless):**

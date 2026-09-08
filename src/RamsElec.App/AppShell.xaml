@@ -12,6 +12,10 @@
             ContentTemplate="{DataTemplate views:DashboardPage}" />
 
         <ShellContent
+            Title="Analytics"
+            ContentTemplate="{DataTemplate views:AnalyticsPage}" />
+
+        <ShellContent
             Title="Jobs"
             ContentTemplate="{DataTemplate views:JobsPage}" />
 
